@@ -14,31 +14,32 @@ class Configurator:
     passMail = None
     destMail = None
 
-    def __init__(self,project):
+    projects = None
 
-        configuration = SafeConfigParser()
-        configuration.read('config.ini')
+    def __init__(self):
 
-        self.pathProject = self.configuration.get(project,'path')
-        self.repoPath = self.configuration.get(project,'repository')
+        self.configuration = SafeConfigParser()
+        self.configuration.read('config.ini')
+
+        self.projects = self.configuration.get('projects','projectList')
 
         # Configuracion base
-        self.basePath = configuration.get('main_config', 'basePath')
-        self.repositoryBase = configuration.get('main_config', 'repositoryBasePath')
+        self.basePath = self.configuration.get('main_config', 'basePath')
+        self.repositoryBase = self.configuration.get('main_config', 'repositoryBasePath')
 
         # Configuracion de mailing
-        self.server = configuration.get('mailing', 'mailserver')
-        self.userMail = configuration.get('mailing', 'userMail')
-        self.passMail = configuration.get('mailing', 'passMail')
-        self.destMail = configuration.get('mailing', 'dstmail')
+        self.server = self.configuration.get('mailing', 'mailserver')
+        self.userMail = self.configuration.get('mailing', 'userMail')
+        self.passMail = self.configuration.get('mailing', 'passMail')
+        self.destMail = self.configuration.get('mailing', 'dstmail')
 
     @classmethod
-    def getpathproject(self):
-        return self.pathProject
+    def getpathproject(self,project):
+        return self.configuration.get(project,'path')
 
     @classmethod
-    def getrepopath(self):
-        return self.repoPath
+    def getrepopath(self,project):
+        return self.configuration.get(project,'repository')
 
     @classmethod
     def getbasepath(self):
@@ -63,3 +64,7 @@ class Configurator:
     @classmethod
     def getdestmail(self):
         return self.destMail
+
+    @classmethod
+    def getprojects(self):
+        return self.projects

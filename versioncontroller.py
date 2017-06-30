@@ -29,5 +29,5 @@ class VersionController():
                 tree.write(self.pathtoproject+"version.xml",'UTF-8')
                 return True
             except:
-                print "Error al escribir la nueva versión"
+                print "Error al escribir la nueva version"
                 return False
