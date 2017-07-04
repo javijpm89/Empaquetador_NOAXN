@@ -1,5 +1,4 @@
 import smtplib
-from email.mime.text import MIMEText
 
 
 class Mailer:
@@ -11,7 +10,6 @@ class Mailer:
         self.mailto=mailto
         self.project=project
         self.version=version
-
 
     def sendmail(self):
 
