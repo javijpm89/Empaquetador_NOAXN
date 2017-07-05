@@ -9,7 +9,7 @@ class Configurator:
     basePath = None
     repositoryBase = None
 
-    server = None
+    mailserver = None
     userMail = None
     passMail = None
     destMail = None
@@ -28,7 +28,7 @@ class Configurator:
         self.repositoryBase = self.configuration.get('main_config', 'repositoryBasePath')
 
         # Configuracion de mailing
-        self.server = self.configuration.get('mailing', 'mailserver')
+        self.mailserver = self.configuration.get('mailing', 'mailserver')
         self.userMail = self.configuration.get('mailing', 'userMail')
         self.passMail = self.configuration.get('mailing', 'passMail')
         self.destMail = self.configuration.get('mailing', 'dstmail')
@@ -51,7 +51,7 @@ class Configurator:
 
     @classmethod
     def getserver(self):
-        return self.server
+        return self.mailserver
 
     @classmethod
     def getusermail(self):
