@@ -3,6 +3,8 @@ from ConfigParser import SafeConfigParser
 
 class Configurator:
 
+    configuration = None
+
     pathProject = None
     repoPath = None
 
@@ -33,38 +35,29 @@ class Configurator:
         self.passMail = self.configuration.get('mailing', 'passMail')
         self.destMail = self.configuration.get('mailing', 'dstmail')
 
-    @classmethod
     def getpathproject(self,project):
         return self.configuration.get(project,'path')
 
-    @classmethod
     def getrepopath(self,project):
         return self.configuration.get(project,'repository')
 
-    @classmethod
     def getbasepath(self):
         return self.basePath
 
-    @classmethod
     def getrepositorybase(self):
         return self.basePath
 
-    @classmethod
     def getserver(self):
         return self.mailserver
 
-    @classmethod
     def getusermail(self):
         return self.userMail
 
-    @classmethod
     def getpassmail(self):
         return self.passMail
 
-    @classmethod
     def getdestmail(self):
         return self.destMail
 
-    @classmethod
     def getprojects(self):
         return self.projects

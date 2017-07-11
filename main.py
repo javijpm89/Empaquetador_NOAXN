@@ -1,10 +1,8 @@
-import versioncontroller
-import zipper
-import Configurator
-import sys
-import mailer
+#!/home/javi/Util/anaconda/bin/python
 import os
-
+import Configurator
+import socket
+from termcolor import colored
 
 
 def printMenu(projects):
@@ -19,50 +17,62 @@ def printMenu(projects):
         id_proyecto=id_proyecto+1
 
 
+def conectamail():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(('vtpostman',25))
+    msg = str(sock.recv(512))
+    response=False
+    if msg.startswith('220'):
+        response = True
+    sock.close()
+    return response
+
+
 def checkconfigparameters(config):
 
-    projectstatus = {}
+    projectsok = []
 
     print 'INFO - Cargando configuracion'
     print 'INFO - Comprobando resolucion de servidor de mail'
-    resulmailserver = os.system("telnet "+config.mailserver + " ; echo $?")
-    if (resulmailserver == 0):
-        print '[OK] - Resolucion de nombre correcta'
+
+
+    if (conectamail()):
+        print colored('[OK] - El servidor de correo responde','green')
     else:
-        print '[ERROR] - Resolucion incorrecta'
+        print ('[ERROR] - Fallo al conectar con el servidor de correo','red')
 
     print 'INFO - Comprobando directorios de todos los proyectos'
 
     for project in config.projects.split(','):
-        projectstatus='KO'
+
         pathIni = config.basePath + config.getpathproject(project)
         pathFin = config.repositoryBase + config.getrepopath(project)
 
         if (os.path.exists(pathIni) and os.path.exists(pathFin)):
-            print '[OK] - Proyecto ' + project + ' comprobado'
-            projectstatus = 'OK'
+            print colored('[OK] - Proyecto ' + project + ' comprobado','green')
+            projectsok.append(project)
         else:
-            print '[ERROR] - Error en el proyecto ' + project
-            projectstatus = 'KO'
+            print colored('[ERROR] - Error en el proyecto ' + project,'red')
 
-        projectstatus.update({project:projectstatus})
-
-    return projectstatus
+    return projectsok
 
 
 def main():
 
     # Sacamos toda la configuracion
     config = Configurator.Configurator()
-    projects = config.projects.split(',')
-    printMenu(projects)
+
+    projectschecked = checkconfigparameters(config)
+
+    printMenu(projectschecked)
 
     # Obtenemos la opcion del usuario y el proyecto que desea versionar
-    idoption = raw_input('Introduzca Id de proyecto a versionar >> ')
+    idoption = int(raw_input('Introduzca Id de proyecto a versionar >> '))
 
-    proyectoseleccionado = projects[idoption-1]
+    proyectoseleccionado = projectschecked[idoption-1]
+
+    print proyectoseleccionado
 
 
 main()
-
 
