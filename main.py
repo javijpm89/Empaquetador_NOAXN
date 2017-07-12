@@ -1,15 +1,23 @@
-#!/home/javi/Util/anaconda/bin/python
+# -*- coding: utf-8 -*-
 import os
-import Configurator
 import socket
 from termcolor import colored
+import time
+import Configurator
+import versioncontroller
+import zipper
 
+
+
+version="0.9_Alpha"
 
 def printMenu(projects):
+
     print "Empaquetador Python"
     print "============ ======"
     print " Proyectos No Axon "
     print " --------- -- ---- "
+    print "Version -> " + version
     print "Listado de proyectos registrados"
     id_proyecto=1
     for project in projects:
@@ -35,7 +43,6 @@ def checkconfigparameters(config):
     print 'INFO - Cargando configuracion'
     print 'INFO - Comprobando resolucion de servidor de mail'
 
-
     if (conectamail()):
         print colored('[OK] - El servidor de correo responde','green')
     else:
@@ -48,11 +55,13 @@ def checkconfigparameters(config):
         pathIni = config.basePath + config.getpathproject(project)
         pathFin = config.repositoryBase + config.getrepopath(project)
 
-        if (os.path.exists(pathIni) and os.path.exists(pathFin)):
+        if os.path.exists(pathIni) and os.path.exists(pathFin):
             print colored('[OK] - Proyecto ' + project + ' comprobado','green')
             projectsok.append(project)
         else:
             print colored('[ERROR] - Error en el proyecto ' + project,'red')
+
+        time.sleep(1)
 
     return projectsok
 
@@ -71,7 +80,27 @@ def main():
 
     proyectoseleccionado = projectschecked[idoption-1]
 
-    print proyectoseleccionado
+    basepath = config.basePath
+
+    pathproject = basepath + config.getpathproject(proyectoseleccionado)
+    pathrepo = config.basePath + config.getrepopath(proyectoseleccionado)
+    today = time.strftime("%Y%m%d")
+
+    print "[INFO] - Obteniendo versión a generar"
+
+    vcontroller = versioncontroller.VersionController(pathproject)
+    currentversion=vcontroller.getVersion()
+
+    if currentversion is None:
+        print colored("[ERROR] - Error al obtener la versión del proyecto " + proyectoseleccionado, "red")
+        exit(1)
+    else:
+        print colored("[OK] - Version a generar" + str(currentversion), "green")
+
+    packagename = proyectoseleccionado+'_'+today+'_'+currentversion+'.zip'
+
+    zipgen = zipper.Zipper(pathproject, pathrepo+packagename)
+
 
 
 main()

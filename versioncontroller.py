@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import xml.etree.ElementTree as ET
 
 
@@ -7,11 +8,14 @@ class VersionController():
         self.pathtoproject=path
 
     def getVersion(self):
-        tree = ET.parse(self.pathtoproject+"version.xml")
-        nodoppal = tree.getroot()
-        if (nodoppal.tag == 'version'):
-            return nodoppal.text
-
+        try:
+            tree = ET.parse(self.pathtoproject+"version.xml")
+            nodoppal = tree.getroot()
+            if (nodoppal.tag == 'version'):
+                return nodoppal.text
+        except IOError as error:
+            print error.message
+            return None
 
     def setNewVersion(self,version):
         ver = str.split(version,'.')
@@ -20,14 +24,15 @@ class VersionController():
         newver = str(str(ver[0])+'.'+str(ver[1])+'.'+str(subver))
         return newver
 
-    def updateVersionValue(self,newversion):
+    def updateversionvalue(self, newversion):
         tree = ET.parse(self.pathtoproject+"version.xml")
         node = tree.getroot()
-        if (node.tag == 'version'):
+
+        if node.tag == 'version':
             node.text = newversion
             try:
                 tree.write(self.pathtoproject+"version.xml",'UTF-8')
                 return True
-            except:
-                print "Error al escribir la nueva version"
+            except Exception as error:
+                print error.message
                 return False
