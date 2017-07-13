@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ConfigParser import SafeConfigParser
-
+import os
 
 class Configurator:
 
@@ -21,8 +21,9 @@ class Configurator:
 
     def __init__(self):
 
+        currentPath = os.getcwd()
         self.configuration = SafeConfigParser()
-        self.configuration.read('config.ini')
+        self.configuration.read(currentPath + '/es/telecor/virtualtraining/empaquetador/config/' + 'config.ini')
 
         self.projects = self.configuration.get('projects','projectList')
 

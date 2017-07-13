@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import os
 import socket
-from termcolor import colored
 import time
-import Configurator
-import versioncontroller
-import zipper
+from termcolor import colored
 
+from es.telecor.virtualtraining.empaquetador.utils import Configurator
+from es.telecor.virtualtraining.empaquetador.utils import zipper
+from es.telecor.virtualtraining.empaquetador.utils import versioncontroller
 
-
-version="0.9_Alpha"
+version="0.9.1_Alpha"
 
 def printMenu(projects):
 
@@ -83,7 +82,8 @@ def main():
     basepath = config.basePath
 
     pathproject = basepath + config.getpathproject(proyectoseleccionado)
-    pathrepo = config.basePath + config.getrepopath(proyectoseleccionado)
+    pathrepo = config.repositoryBase + config.getrepopath(proyectoseleccionado)
+
     today = time.strftime("%Y%m%d")
 
     print "[INFO] - Obteniendo versión a generar"
@@ -95,11 +95,11 @@ def main():
         print colored("[ERROR] - Error al obtener la versión del proyecto " + proyectoseleccionado, "red")
         exit(1)
     else:
-        print colored("[OK] - Version a generar" + str(currentversion), "green")
+        print colored("[OK] - Version a generar -> " + str(currentversion), "green")
 
     packagename = proyectoseleccionado+'_'+today+'_'+currentversion+'.zip'
-
-    zipgen = zipper.Zipper(pathproject, pathrepo+packagename)
+    zipgen = zipper.Zipper(pathproject, pathrepo + packagename)
+    zipgen.zipContent()
 
 
 
