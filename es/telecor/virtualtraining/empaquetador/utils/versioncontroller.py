@@ -24,15 +24,15 @@ class VersionController():
         newver = str(str(ver[0])+'.'+str(ver[1])+'.'+str(subver))
         return newver
 
-    def updateversionvalue(self, newversion):
-        tree = ET.parse(self.pathtoproject+"version.xml")
-        node = tree.getroot()
+    def writenewversion(self, newversion):
 
-        if node.tag == 'version':
-            node.text = newversion
-            try:
-                tree.write(self.pathtoproject+"version.xml",'UTF-8')
-                return True
-            except Exception as error:
-                print error.message
-                return False
+        root = ET.Element("version")
+        root.text = newversion
+
+        tree = ET.ElementTree(root)
+        try:
+            tree.write(self.pathtoproject+"version.xml")
+            return True
+        except Exception as ex:
+            print ex.message
+            return False

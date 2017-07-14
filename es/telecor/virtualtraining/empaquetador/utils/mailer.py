@@ -30,7 +30,12 @@ class Mailer:
 
             try:
                 conection.sendmail(self.mailfrom,self.mailto,message.as_string())
+                return True
+            except Exception as e:
+                print e.message
+                return False
             finally:
                 conection.close()
         except Exception, exc:
             sys.exit("Fallo al enviar el correo %s" % str(exc))
+            return False

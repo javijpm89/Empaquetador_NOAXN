@@ -7,8 +7,9 @@ from termcolor import colored
 from es.telecor.virtualtraining.empaquetador.utils import Configurator
 from es.telecor.virtualtraining.empaquetador.utils import zipper
 from es.telecor.virtualtraining.empaquetador.utils import versioncontroller
+from es.telecor.virtualtraining.empaquetador.utils import mailer
 
-version="0.9.1_Alpha"
+version="0.9.5_Alpha"
 
 def printMenu(projects):
 
@@ -97,11 +98,35 @@ def main():
     else:
         print colored("[OK] - Version a generar -> " + str(currentversion), "green")
 
+    # Generamos el paquete con version y fecha
     packagename = proyectoseleccionado+'_'+today+'_'+currentversion+'.zip'
     zipgen = zipper.Zipper(pathproject, pathrepo + packagename)
     zipgen.zipContent()
 
+    # Aumentamos el numero de version en el fichero version.xml
+    newver=vcontroller.setNewVersion(currentversion)
 
+
+    # Notificamos via correo que se ha generado un paquete nuevo
+
+    mail = mailer.Mailer(config.mailserver,config.userMail,config.passMail,config.userMail,config.destMail,proyectoseleccionado,currentversion)
+    rcmailer=mail.sendmail()
+
+    if rcmailer is True:
+        print colored("[OK] - Correo enviado a "+config.destMail,'green')
+    else:
+        print colored("[ERROR] - Fallo en el envío del correo")
+
+    # Borramos ahora todos los ficheros y dejamos la parte de subidas limpia (a excepcion del version.xml)
+    print "INFO - Borrando los ficheros ya empaquetados"
+    os.system("rm -R " + pathproject +"*")
+
+    resultupdatever = vcontroller.writenewversion(newver)
+
+    if resultupdatever is True:
+        print colored("[OK] - Nueva version " + str(newver) + " fijada en version.xml", 'green')
+    else:
+        print colored("[ERROR] - No se ha podido actualizar el fichero de version", 'red')
 
 main()
 
