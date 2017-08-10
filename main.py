@@ -9,9 +9,10 @@ from es.telecor.virtualtraining.empaquetador.utils import zipper
 from es.telecor.virtualtraining.empaquetador.utils import versioncontroller
 from es.telecor.virtualtraining.empaquetador.utils import mailer
 
-version="0.9.5_Alpha"
+version = "0.9.5_Alpha"
 
-def printMenu(projects):
+
+def printmenu(projects):
 
     print "Empaquetador Python"
     print "============ ======"
@@ -52,10 +53,10 @@ def checkconfigparameters(config):
 
     for project in config.projects.split(','):
 
-        pathIni = config.basePath + config.getpathproject(project)
-        pathFin = config.repositoryBase + config.getrepopath(project)
+        path_ini = config.basePath + config.getpathproject(project)
+        path_fin = config.repositoryBase + config.getrepopath(project)
 
-        if os.path.exists(pathIni) and os.path.exists(pathFin):
+        if os.path.exists(path_ini) and os.path.exists(path_fin):
             print colored('[OK] - Proyecto ' + project + ' comprobado','green')
             projectsok.append(project)
         else:
@@ -68,12 +69,12 @@ def checkconfigparameters(config):
 
 def main():
 
-    # Sacamos toda la configuracion
+    # Cargamos la configuracion
     config = Configurator.Configurator()
 
     projectschecked = checkconfigparameters(config)
 
-    printMenu(projectschecked)
+    printmenu(projectschecked)
 
     # Obtenemos la opcion del usuario y el proyecto que desea versionar
     idoption = int(raw_input('Introduzca Id de proyecto a versionar >> '))
@@ -90,7 +91,7 @@ def main():
     print "[INFO] - Obteniendo versión a generar"
 
     vcontroller = versioncontroller.VersionController(pathproject)
-    currentversion=vcontroller.getVersion()
+    currentversion=vcontroller.getversion()
 
     if currentversion is None:
         print colored("[ERROR] - Error al obtener la versión del proyecto " + proyectoseleccionado, "red")
@@ -101,10 +102,10 @@ def main():
     # Generamos el paquete con version y fecha
     packagename = proyectoseleccionado+'_'+today+'_'+currentversion+'.zip'
     zipgen = zipper.Zipper(pathproject, pathrepo + packagename)
-    zipgen.zipContent()
+    zipgen.zipcontent()
 
     # Aumentamos el numero de version en el fichero version.xml
-    newver=vcontroller.setNewVersion(currentversion)
+    newver= setnewversion(currentversion)
 
 
     # Notificamos via correo que se ha generado un paquete nuevo

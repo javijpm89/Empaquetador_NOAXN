@@ -3,6 +3,7 @@ import smtplib
 from email.mime.text import MIMEText
 import sys
 
+
 class Mailer:
 
     def __init__(self, server,usermail,password,mailfrom,mailto,project,version):
@@ -37,5 +38,5 @@ class Mailer:
             finally:
                 conection.close()
         except Exception, exc:
-            sys.exit("Fallo al enviar el correo %s" % str(exc))
+            print ("Fallo al enviar el correo %s" % str(exc))
             return False
