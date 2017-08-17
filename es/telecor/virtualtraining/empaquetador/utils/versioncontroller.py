@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import xml.etree.ElementTree as ET
+import ssl
+import urllib2
+import xmltodict
 
 
 class VersionController():
@@ -31,9 +34,32 @@ class VersionController():
             return False
 
     def setnewversion(self, version):
+
         ver = str.split(version,'.')
-        subver = int(ver[2])
-        subver = subver+1
-        newver = str(str(ver[0])+'.'+str(ver[1])+'.'+str(subver))
+        subver3 = int(ver[2])
+        subver2 = int(ver[1])
+        subver1 = int(ver[0])
+
+        if subver3 == 999:
+            if subver2 == 999:
+                subver1 = subver1 + 1
+                subver2 = 0
+                subver3 = 0
+            subver2 = subver2 + 1
+            subver3 = 0
+
+        subver3 = subver3 + 1
+        newver = str(str(subver1) + '.' + str(subver2) + '.' + str(subver3))
         return newver
 
+    def getversionfromweb(self,url):
+
+        context = ssl._create_unverified_context(ssl.PROTOCOL_TLSv1)
+
+        file = urllib2.urlopen(url+'/version.xml', context=context)
+        data = file.read()
+        file.close()
+
+        data = xmltodict.parse(data)
+
+        return data['version']

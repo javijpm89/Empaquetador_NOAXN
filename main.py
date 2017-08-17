@@ -9,7 +9,7 @@ from es.telecor.virtualtraining.empaquetador.utils import zipper
 from es.telecor.virtualtraining.empaquetador.utils import versioncontroller
 from es.telecor.virtualtraining.empaquetador.utils import mailer
 
-version = "0.9.5_Alpha"
+version = "0.9.6_Alpha"
 
 
 def printmenu(projects):
@@ -95,7 +95,8 @@ def main():
 
     if currentversion is None:
         print colored("[ERROR] - Error al obtener la versión del proyecto " + proyectoseleccionado, "red")
-        exit(1)
+        print colored("[INFO] - Obteniendo version.xml desde la URL")
+        currentversion = vcontroller.getversionfromweb()
     else:
         print colored("[OK] - Version a generar -> " + str(currentversion), "green")
 
@@ -105,7 +106,7 @@ def main():
     zipgen.zipcontent()
 
     # Aumentamos el numero de version en el fichero version.xml
-    newver= setnewversion(currentversion)
+    newver = vcontroller.setnewversion(currentversion)
 
 
     # Notificamos via correo que se ha generado un paquete nuevo

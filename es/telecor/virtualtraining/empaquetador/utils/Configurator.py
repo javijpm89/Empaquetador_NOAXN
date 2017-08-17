@@ -2,6 +2,7 @@
 from ConfigParser import SafeConfigParser
 import os
 
+
 class Configurator:
 
     configuration = None
@@ -11,6 +12,7 @@ class Configurator:
 
     basePath = None
     repositoryBase = None
+    url = None
 
     mailserver = None
     userMail = None
@@ -42,6 +44,9 @@ class Configurator:
 
     def getrepopath(self,project):
         return self.configuration.get(project,'repository')
+
+    def geturl(self,project):
+        return self.configuration.get(project,'url')
 
     def getbasepath(self):
         return self.basePath
